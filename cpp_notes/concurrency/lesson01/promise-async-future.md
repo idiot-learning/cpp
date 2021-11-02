@@ -1,6 +1,5 @@
 # use opencv in a cmake project
 
-## fetch from smartmore website
 
 
 
