@@ -1,0 +1,11 @@
+build/
+*.dll
+*.exe
+3rdparty/
+.vscode/
+opencv/
+vcpkg/
+*.vcxproj
+*.sln
+*.vcproj
+
