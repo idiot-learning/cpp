@@ -1,4 +1,6 @@
 build/
+Debug/
+Release/
 *.dll
 *.exe
 3rdparty/
