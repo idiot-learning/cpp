@@ -4,7 +4,16 @@
 shared_ptr<string> ptr(new string("1111"));
 shared_ptr<string> ptr2 = make_shared<string>("1111");
 
+//这么写可以吗
+shared_ptr<string> ptr3; 
+ptr3 = new string("1111"); //错误，没有从 *string 到 shared_ptr<string> 的转化
+ptr3 = std::shared_ptr<string>(new string("1111")); //可以
+ptr3 = std::make_shared<string>(new string("1111")); //不可以,make_shared 调用string 的构造函数
+
+std::shared_ptr<std::string> ptr = std::make_shared<std::string>("1111" ); //可以
+
 ```
+
 
 # 智能指针使用的注意点
 1. 如果使用裸指针初始化智能指针后，这个裸指针不能够再次被使用
