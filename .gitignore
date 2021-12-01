@@ -10,4 +10,4 @@ vcpkg/
 *.vcxproj
 *.sln
 *.vcproj
-
+.DS_Store
