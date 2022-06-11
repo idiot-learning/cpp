@@ -1,14 +1,51 @@
-#include <Windows.h>
+// #include <Windows.h>
+
+#include <assert.h>
 
 #include <chrono>
 #include <iostream>
+#include <random>
 #include <vector>
 
 #include "solution.h"
-#include "utility.h"
+#include "solution_single.h"
+template <typename T>
+std::vector<std::vector<T>> GenerateMatrixMN(const int M, const int N)
+{
+    assert(M > 0 && N > 0);
+    std::srand(time(nullptr));
+    std::vector<std::vector<T>> res(M, std::vector<T>(N, 0));
+    for (int i = 0; i < M; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            float val = rand() % 200 + rand() / double(RAND_MAX);
+            res[i][j] = val - 100;
+        }
+    }
+    return res;
+}
+
+// generate random matrix with given size N X 1
+template <typename T>
+std::vector<T> GenerateMatrixN1(const int N)
+{
+    assert(N > 0);
+    std::srand(time(nullptr));
+    std::vector<T> res(N, 0);
+
+    for (int j = 0; j < N; j++)
+    {
+        float val = rand() % 200 + rand() / double(RAND_MAX);
+        res[j] = val - 100;
+    }
+
+    return res;
+}
+
 using chrono_clock = std::chrono::high_resolution_clock;
 #define TIME_DIFF(x, y) \
-    std::chrono::duration_cast<std::chrono::microseconds>((y) - (x)).count()
+    std::chrono::duration_cast<std::chrono::nanoseconds>((y) - (x)).count()
 int main()
 {
     /*
@@ -23,7 +60,7 @@ int main()
     */
     std::vector<std::vector<std::vector<float>>> dataset1B;
     std::vector<std::vector<float>> dataset1bx;
-    dataset1B.push_back(GenerateMatrixMN<float>(100, 1000));
+    dataset1B.push_back(GenerateMatrixMN<float>(1000, 1000));
     dataset1bx.push_back(GenerateMatrixN1<float>(1000));
 
     long long timeDiffSum1 = 0;
@@ -31,17 +68,19 @@ int main()
     /*
 base example
 */
-    // for (int i = 0; i < L1; i++)
-    // {
-    //     auto s = smartmore::Solution();
-    //     auto start = chrono_clock::now();
-    //     float result = s.clacModule<float>(dataset1B[i], dataset1bx[i]);
-    //     std::cout << "Base result  = " << result << std::endl;
-    //     auto end = chrono_clock::now();
-    //     timeDiffSum1 += TIME_DIFF(start, end);
-    // }
-    // std::cout << "Base time  = " << timeDiffSum1 << std::endl;
-    
+
+    timeDiffSum1 = 0;
+    for (int i = 0; i < L1; i++)
+    {
+        auto s = smartmore_single::Solution();
+        auto start = chrono_clock::now();
+        float result = s.clacModule<float>(dataset1B[i], dataset1bx[i]);
+        std::cout << "Multiple result  = " << result << std::endl;
+        auto end = chrono_clock::now();
+        timeDiffSum1 += TIME_DIFF(start, end);
+    }
+    std::cout << "Multiple time  = " << timeDiffSum1 << std::endl;
+
     timeDiffSum1 = 0;
     /*
     round 1 example
@@ -50,7 +89,7 @@ base example
     {
         auto s = smartmore::Solution();
         auto start = chrono_clock::now();
-        float result = s.clacModule_thread<int>(dataset1A[i], dataset1x[i]);
+        float result = s.clacModule<float>(dataset1B[i], dataset1bx[i]);
         std::cout << "Round 1 result  = " << result << std::endl;
         auto end = chrono_clock::now();
         timeDiffSum1 += TIME_DIFF(start, end);
